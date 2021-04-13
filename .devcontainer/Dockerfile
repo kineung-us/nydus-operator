@@ -4,7 +4,7 @@ FROM elixir:${VARIANT}
 
 # Options
 ARG INSTALL_ZSH="true"
-ARG UPGRADE_PACKAGES="false"
+ARG UPGRADE_PACKAGES="true"
 ARG ENABLE_NONROOT_DOCKER="true"
 ARG SOURCE_SOCKET=/var/run/docker-host.sock
 ARG TARGET_SOCKET=/var/run/docker.sock
