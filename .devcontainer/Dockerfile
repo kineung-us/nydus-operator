@@ -44,3 +44,5 @@ RUN chown ${USERNAME}:root /usr/local/share/copy-kube-config.sh \
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
+
+RUN mix local.hex --force

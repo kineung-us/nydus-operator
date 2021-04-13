@@ -19,3 +19,11 @@ Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_do
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/nydus_operator](https://hexdocs.pm/nydus_operator).
 
+
+
+```
+rm manifest.yaml
+mix bonny.gen.manifest
+kubectl apply -f ./manifest.yaml
+iex -S mix
+```

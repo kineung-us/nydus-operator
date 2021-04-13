@@ -1,0 +1,7 @@
+apiVersion: nydus-operator.mrchypark.github.io/v1
+kind: External
+metadata:
+  name: hello-server
+  namespace: default
+spec:
+  greeting: Hello
