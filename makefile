@@ -26,12 +26,12 @@ apply:
 	kubectl get all
 
 greetings:
-	kubectl apply -f ./greetings.yaml
+	kubectl apply -f ./examples/external.yaml
 	kubectl get all
 
 clean:
-	- kubectl delete -f ./greetings.yaml
+	kubectl delete -f ./greetings.yaml
 	sleep 5
-	- kubectl delete -f ./manifest.yaml
-	- rm manifest.yaml
-	- rm -rf mix.lock _build deps
+	kubectl delete -f ./manifest.yaml
+	rm manifest.yaml
+	rm -rf mix.lock _build deps
