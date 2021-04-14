@@ -70,32 +70,10 @@
     },
     {
       "apiGroups": [
-        "apps"
-      ],
-      "resources": [
-        "deployments"
-      ],
-      "verbs": [
-        "*"
-      ]
-    },
-    {
-      "apiGroups": [
         ""
       ],
       "resources": [
         "configmaps"
-      ],
-      "verbs": [
-        "*"
-      ]
-    },
-    {
-      "apiGroups": [
-        "apps"
-      ],
-      "resources": [
-        "deployments"
       ],
       "verbs": [
         "*"

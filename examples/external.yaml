@@ -12,10 +12,51 @@ spec:
       topic: ""
       ttl: "60"
     target:
-      root: ""
+      root: "" #
       version: "external"
     timeout:
       invoke: "60"
       publish: "5"
       callback: "5"
+  prometheus:
+    scrape: "true"
+    # TODO : need to set same dapr.metrics-port
+    # port: "9090"
+    path: "/"
   dapr:
+    # checkout dapr 1.1.0 annotation docs
+    # https://docs.dapr.io/operations/hosting/kubernetes/kubernetes-annotations/
+    enabled: true
+    config: ""
+    http-max-request-size: 4
+    env: ""
+    metrics-port: "9090"
+    log-level: "info"
+    log-as-json: true
+    enable-profiling: false
+    # api-token-secret: 
+    app:
+      id: ""
+      port: ""
+      protocol: "http"
+      max-concurrency: "0"
+      ssl: "false"
+    sidecar:
+      resource:
+        cpu:
+          limit: "300m"
+          request: "100m"
+        memory:
+          limit: "1000Mi"
+          request: "250Mi"
+      probe:
+        liveness:
+          delay-seconds: "3"
+          timeout-seconds: "3"
+          period-seconds: "6"
+          threshold: "3"
+        readiness:
+          delay-seconds: "3"
+          timeout-seconds: "3"
+          period-seconds: "6"
+          threshold: "3"
