@@ -27,8 +27,8 @@ if Mix.env() == :prod do
 config :bonny,
   # Add each CRD Controller module for this operator to load here
   controllers: [
-    NydusOperator.Controller.V1.External,
-    NydusOperator.Controller.V1.Deployment
+    NydusOperator.Controller.V1.External
+    # NydusOperator.Controller.V1.Deployment
   ],
   #   # Set the Kubernetes API group for this operator.
   #   # This can be overwritten using the @group attribute of a controller

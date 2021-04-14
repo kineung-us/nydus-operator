@@ -4,4 +4,18 @@ metadata:
   name: hello-server
   namespace: default
 spec:
-  greeting: Hello
+  nydus:
+    debug: "false"
+    port: "5000"
+    pubsub:
+      name: ""
+      topic: ""
+      ttl: "60"
+    target:
+      root: ""
+      version: "external"
+    timeout:
+      invoke: "60"
+      publish: "5"
+      callback: "5"
+  dapr:
