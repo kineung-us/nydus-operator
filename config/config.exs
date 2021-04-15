@@ -42,6 +42,8 @@ config :bonny,
   #   # Defaults to hyphenated mix app name
   service_account_name: "nydus-operator",
 
+  api_version: "apiextensions.k8s.io/v1",
+
   #   # Labels to apply to the operator's resources.
   #   labels: %{
   #     "kewl": "true"
