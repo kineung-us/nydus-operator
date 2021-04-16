@@ -7,67 +7,41 @@ metadata:
     app.kubernetes.io/name: "nydus-external" # default set and set ignore
     # need to set same metadata.name
     app.kubernetes.io/instance: 
-    app.kubernetes.io/version: 0.0.5 # default set and set ignore
+    app.kubernetes.io/version: 0.0.7 # default set and set ignore
     # app.kubernetes.io/component: # if not set, remove
     # app.kubernetes.io/part-of: # if not set, remove
     app.kubernetes.io/managed-by: "nydus-operator" # default set and set ignore
 spec:
-  nydus:
-    debug: "false" # default set
-    port: "5000" # default set
-    pubsub:
-      name: "" # required
-      # TODO : need to set same metadata.name default but set work
-      topic: "" # required
-      ttl: "60" # default set
-    target:
-      root: "" # required
-      version: "external" # default set
-    timeout:
-      invoke: "60" # default set
-      publish: "3" # default set
-      callback: "3" # default set
-  prometheus:
-    scrape: "true" # default set
-    # TODO : need to set same dapr.metrics-port set ignore
-    # port: "9090"
-    path: "/" # default set
-  dapr:
-    # checkout dapr 1.1.0 annotation docs
-    # https://docs.dapr.io/operations/hosting/kubernetes/kubernetes-annotations/
-    enabled: true
-    config: "" # required
-    http-max-request-size: 4 # default set. unit Mb
-    # env: "" # if not set, remove
-    metrics-port: "9090" # default set
-    log-level: "info" # default set
-    log-as-json: true # default set
-    enable-profiling: false # default set
-    # api-token-secret: # if not set, remove
-    app:
-      # TODO : need to set same spec.nydus.pubsub.topic default but set work
-      id: "" 
-      # TODO : need to set same spec.nydus.port default set ignore
-      port: "" 
-      protocol: "http" # default set
-      max-concurrency: "0" # default set
-      ssl: "false" # default set
-    sidecar:
-      resource:
-        cpu:
-          limit: "300m" # default set
-          request: "100m" # default set
-        memory:
-          limit: "1000Mi" # default set
-          request: "250Mi" # default set
-      probe:
-        liveness:
-          delay-seconds: "3" # default set
-          timeout-seconds: "3" # default set
-          period-seconds: "6" # default set
-          threshold: "3" # default set
-        readiness:
-          delay-seconds: "3" # default set
-          timeout-seconds: "3" # default set
-          period-seconds: "6" # default set
-          threshold: "3" # default set
+  metadata:
+    annotations:
+      # checkout dapr 1.1.0 annotation docs
+      # https://docs.dapr.io/operations/hosting/kubernetes/kubernetes-annotations/
+      dapr.io/enabled: "true"
+      dapr.io/log-as-json: "true"
+      dapr.io/log-level: "info"
+      dapr.io/sidecar-cpu-limit: 300m
+      dapr.io/sidecar-memory-limit: 1000Mi
+      dapr.io/sidecar-cpu-request: 100m
+      dapr.io/sidecar-memory-request: 250Mi
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "9090"
+      prometheus.io/path: "/"
+  spec:
+    nydus:
+      containers:
+        image: "mrchypark/nydus:0.0.6"
+      
+      debug: "false" # default set
+      port: "5000" # default set
+      pubsub:
+        name: "" # required
+        # TODO : need to set same metadata.name default but set work
+        topic: "" # required
+        ttl: "60" # default set
+      target:
+        root: "" # required
+        version: "external" # default set
+      timeout:
+        invoke: "60" # default set
+        publish: "3" # default set
+        callback: "3" # default set

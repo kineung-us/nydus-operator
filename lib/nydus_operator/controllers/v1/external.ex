@@ -31,9 +31,8 @@ defmodule NydusOperator.Controller.V1.External do
   require Logger
   use Bonny.Controller
 
-  @group "nydus-operator.mrchypark.github.io"
+  @group "nydus.mrchypark.github.io"
   @version "v1"
-  @api_version "apiextensions.k8s.io/v1s"
 
   @scope :namespaced
   @names %{
@@ -117,6 +116,10 @@ defmodule NydusOperator.Controller.V1.External do
 
   defp gen_deployment(ns, name, spec) do
     Default.deployment()
+  end
+
+  defp spec_to_deployment(spec) do
+
   end
 
   defp run(%K8s.Operation{} = op),

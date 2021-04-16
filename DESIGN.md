@@ -1,5 +1,9 @@
 # Design goal
 
+## external controller
+
+publish-pubsub 세팅이 필요없음.
+
 현재 deploy에 spec 에서 반영해야 할 파라미터의 특성은 총 5개
 
 1. 필수값. 없으면 에러 출력
@@ -44,3 +48,25 @@
 
 1. default에 컬럼도 작성하지 않음.
 1. 리소스 값을 추가함.
+
+
+## injector
+
+"nydus.mrchypark.github.io/enabled"
+"nydus.mrchypark.github.io/debug"
+"nydus.mrchypark.github.io/app-port"
+"nydus.mrchypark.github.io/publish-pubsub-name"
+"nydus.mrchypark.github.io/publish-pubsub-ttl"
+"nydus.mrchypark.github.io/subscribe-pubsub-name"
+"nydus.mrchypark.github.io/subscribe-topic-name"
+"nydus.mrchypark.github.io/target-root"
+"nydus.mrchypark.github.io/target-version"
+"nydus.mrchypark.github.io/invoke-timeout-seconds"
+"nydus.mrchypark.github.io/publish-timeout-seconds"
+"nydus.mrchypark.github.io/callback-timeout-seconds"
+
+## 설계
+
+operator 에서는 기본값을 처리하지 않음.
+기본값 처리는 앱에 기록하고 처리함.
+필수값은 에러 메세지 출력후 종료.

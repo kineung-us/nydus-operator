@@ -22,6 +22,7 @@ defmodule NydusOperator.MixProject do
   defp deps do
     [
       {:bonny, "~> 0.4.3"},
+      {:nested_filter, "~> 1.2.2"},
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev, :test], runtime: false},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:mix_test_watch, "~> 0.8", only: :dev, runtime: false}
