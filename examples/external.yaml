@@ -1,16 +1,16 @@
-apiVersion: nydus-operator.mrchypark.github.io/v1
+apiVersion: nydus.mrchypark.github.io/v1
 kind: External
 metadata:
   name: hello-server # required
   namespace: default # default set
   labels:
-    app.kubernetes.io/name: "nydus-external" # default set and set ignore
+    app.kubernetes.io/name: "nydus-external" 
     # need to set same metadata.name
     app.kubernetes.io/instance: 
-    app.kubernetes.io/version: 0.0.7 # default set and set ignore
-    # app.kubernetes.io/component: # if not set, remove
-    # app.kubernetes.io/part-of: # if not set, remove
-    app.kubernetes.io/managed-by: "nydus-operator" # default set and set ignore
+    app.kubernetes.io/version: 0.0.8
+    # app.kubernetes.io/component: 
+    # app.kubernetes.io/part-of: 
+    app.kubernetes.io/managed-by: "nydus-operator" 
 spec:
   metadata:
     annotations:
@@ -26,22 +26,20 @@ spec:
       prometheus.io/scrape: "true"
       prometheus.io/port: "9090"
       prometheus.io/path: "/"
-  spec:
-    nydus:
-      containers:
-        image: "mrchypark/nydus:0.0.6"
-      
-      debug: "false" # default set
-      port: "5000" # default set
-      pubsub:
-        name: "" # required
-        # TODO : need to set same metadata.name default but set work
-        topic: "" # required
-        ttl: "60" # default set
-      target:
-        root: "" # required
-        version: "external" # default set
-      timeout:
-        invoke: "60" # default set
-        publish: "3" # default set
-        callback: "3" # default set
+  nydus:
+    containers:
+      image: "mrchypark/nydus:0.0.8"
+    debug: "false" # default set
+    port: "5000" # default set
+    pubsub:
+      name: "" # required
+      # TODO : need to set same metadata.name default but set work
+      topic: "" # required
+      ttl: "60" # default set
+    target:
+      root: "" # required
+      version: "external" # default set
+    timeout:
+      invoke: "60" # default set
+      publish: "3" # default set
+      callback: "3" # default set

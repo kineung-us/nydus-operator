@@ -62,8 +62,9 @@ defmodule NydusOperator.Controller.V1.External do
   def add(payload) do
     track_event(:add, payload)
     resources = parse(payload)
-
-    with {:ok, _} <- K8s.Client.create(resources.deployment) |> run do
+    tem = K8s.Client.create(resources.deployment)
+    track_event(:modify_template, tem)
+    with tem |> run do
       :ok
     else
       {:error, error} -> {:error, error}
@@ -76,9 +77,11 @@ defmodule NydusOperator.Controller.V1.External do
   @spec modify(map()) :: :ok | :error
   @impl Bonny.Controller
   def modify(payload) do
+    track_event(:modify, payload)
     resources = parse(payload)
-
-    with {:ok, _} <- K8s.Client.patch(resources.deployment) |> run do
+    tem = K8s.Client.patch(resources.deployment)
+    track_event(:modify_template, tem)
+    with tem |> run do
       :ok
     else
       {:error, error} -> {:error, error}
@@ -103,30 +106,82 @@ defmodule NydusOperator.Controller.V1.External do
 
   defp parse(%{
          "metadata" => %{"name" => name, "namespace" => ns},
-         "spec" => spec
-       }) do
-    deployment = gen_deployment(ns, name, spec)
+         "spec" => %{
+            "metadata" => %{"annotations" => annotations},
+            "nydus" => config
+          }
+          }) do
+    deployment = gen_deployment(name, ns, annotations, config)
+    # deployment = %{
+    #   "apiVersion" => "apps/v1",
+    #   "kind" => "Deployment",
+    #   "metadata" => %{
+    #     "labels" => %{"app" => "nginx"},
+    #     "name" => "nginx-deployment",
+    #     "namespace" => "default"
+    #   },
+    #   "spec" => %{
+    #     "replicas" => 3,
+    #     "selector" => %{"matchLabels" => %{"app" => "nginx"}},
+    #     "template" => %{
+    #       "metadata" => %{"labels" => %{"app" => "nginx"}},
+    #       "spec" => %{
+    #         "containers" => [
+    #           %{
+    #             "image" => "nginx:1.7.9",
+    #             "name" => "nginx",
+    #             "ports" => [%{"containerPort" => 80}]
+    #           }
+    #         ]
+    #       }
+    #     }
+    #   }
+    # }
 
     %{
       deployment: deployment
     }
   end
 
-  alias NydusOperator.Resource.Default
+  alias NydusOperator.Resource.Default.Deployment
 
-  defp gen_deployment(ns, name, spec) do
-    Default.deployment()
+  defp gen_deployment(name, ns, annotations, config) do
+    config = config
+    |> get_nydus_values
+
+    Deployment.new(name, ns, annotations, config)
   end
 
-  defp spec_to_deployment(spec) do
-
+  defp get_nydus_values(nydus) do
+    nydus
+    |> flatten()
   end
 
   defp run(%K8s.Operation{} = op),
     do: K8s.Client.run(op, Bonny.Config.cluster_name())
 
   defp track_event(type, resource),
-    do: Logger.info("#{type}: #{inspect(resource)}")
+    do: Logger.info("#{type}: \n #{inspect(resource, pretty: true)}")
+
+  def flatten(map) when is_map(map) do
+    map
+    |> to_list_of_tuples
+    |> Enum.into(%{})
+  end
+
+  defp to_list_of_tuples(m) do
+    m
+    |> Enum.map(&process/1)
+    |> List.flatten
+  end
+
+  defp process({key, sub_map}) when is_map(sub_map) do
+    for { sub_key, value } <- flatten(sub_map) do
+      { "#{key}-#{sub_key}", value }
+    end
+  end
+
+  defp process(next), do: next
 end
 
 

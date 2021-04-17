@@ -53,10 +53,9 @@ publish-pubsub 세팅이 필요없음.
 ## injector
 
 "nydus.mrchypark.github.io/enabled"
-"nydus.mrchypark.github.io/debug"
-"nydus.mrchypark.github.io/app-port"
+"nydus.mrchypark.github.io/http-port"
 "nydus.mrchypark.github.io/publish-pubsub-name"
-"nydus.mrchypark.github.io/publish-pubsub-ttl"
+"nydus.mrchypark.github.io/publish-pubsub-ttl-seconds"
 "nydus.mrchypark.github.io/subscribe-pubsub-name"
 "nydus.mrchypark.github.io/subscribe-topic-name"
 "nydus.mrchypark.github.io/target-root"

@@ -22,6 +22,7 @@ be found at [https://hexdocs.pm/nydus_operator](https://hexdocs.pm/nydus_operato
 
 
 ```
+kubectl delete -f ./manifest.yaml
 rm manifest.yaml
 mix bonny.gen.manifest
 kubectl apply -f ./manifest.yaml
