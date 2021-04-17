@@ -34,11 +34,18 @@ defmodule NydusOperator.Resource.Default.Deployment do
             }
             },
             "spec" => %{
-              # "securityContext" => %{
-              #   "fsGroup" => 2000
-              # },
+              "securityContext" => %{
+                "fsGroup" => 2000
+              },
               "containers" => [
                 %{
+                  "securityContext" => %{
+                    "capabilities" => %{
+                      "drop" => ["ALL"]
+                    },
+                    "readOnlyRootFilesystem" => true,
+                    "runAsNonRoot" => true
+                  },
                   "env" => env(config),
                   "image" => "mrchypark/nydus:" <> Application.fetch_env!( :nydus_operator,  :nydus_version),
                   "livenessProbe" => %{
@@ -71,14 +78,7 @@ defmodule NydusOperator.Resource.Default.Deployment do
                       "cpu" => "100m",
                       "memory" => "32Mi"
                     }
-                  },
-                  # "securityContext" => %{
-                  #   "capabilities" => %{
-                  #     "drop" => ["ALL"]
-                  #   },
-                  #   "readOnlyRootFilesystem" => "true",
-                  #   "runAsNonRoot" => "true"
-                  # }
+                  }
                 }
               ]
             }
