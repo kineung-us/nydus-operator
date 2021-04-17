@@ -61,14 +61,20 @@ defmodule NydusOperator.Controller.V1.External do
   @impl Bonny.Controller
   def add(payload) do
     track_event(:add, payload)
-    resources = parse(payload)
-    tem = K8s.Client.create(resources.deployment)
-    track_event(:modify_template, tem)
+    deployment = parse(payload)
+    track_event(:parsed, deployment)
+    op = K8s.Client.create(deployment)
+    track_event(:operation, op)
 
-    with tem |> run do
-      :ok
-    else
-      {:error, error} -> {:error, error}
+    case run(op) do
+      {:ok, cre} ->
+        track_event(:build, cre)
+
+      {:error, error} ->
+        track_event(:create_fail, error)
+
+      _ ->
+        track_event(:create_else, op)
     end
   end
 
@@ -79,14 +85,20 @@ defmodule NydusOperator.Controller.V1.External do
   @impl Bonny.Controller
   def modify(payload) do
     track_event(:modify, payload)
-    resources = parse(payload)
-    tem = K8s.Client.patch(resources.deployment)
-    track_event(:modify_template, tem)
+    deployment = parse(payload)
+    track_event(:parsed, deployment)
+    op = K8s.Client.patch(deployment)
+    track_event(:operation, op)
 
-    with tem |> run do
-      :ok
-    else
-      {:error, error} -> {:error, error}
+    case run(op) do
+      {:ok, cre} ->
+        track_event(:build, cre)
+
+      {:error, error} ->
+        track_event(:modify_fail, error)
+
+      _ ->
+        track_event(:modify_else, op)
     end
   end
 
@@ -97,37 +109,43 @@ defmodule NydusOperator.Controller.V1.External do
   @impl Bonny.Controller
   def delete(payload) do
     track_event(:delete, payload)
-    resources = parse(payload)
+    deployment = parse(payload)
+    track_event(:parsed, deployment)
+    op = K8s.Client.delete(deployment)
+    track_event(:operation, op)
 
-    with {:ok, _} <- K8s.Client.delete(resources.deployment) |> run do
-      :ok
-    else
-      {:error, error} -> {:error, error}
+    case run(op) do
+      {:ok, cre} ->
+        track_event(:build, cre)
+
+      {:error, error} ->
+        track_event(:delete_fail, error)
+
+      _ ->
+        track_event(:delete_else, op)
     end
   end
 
-  defp parse(%{
-         "metadata" => %{"name" => name, "namespace" => ns, "labels" => labels},
-         "spec" => %{
-           "metadata" => %{"annotations" => annotations},
-           "nydus" => config
-         }
-       }) do
-    deployment = gen_deployment(name, ns, labels, annotations, config)
-
-    %{
-      deployment: deployment
-    }
+  defp parse(
+         %{
+           "metadata" => %{"name" => name, "namespace" => ns},
+           "spec" => %{
+             "metadata" => %{"annotations" => annotations},
+             "nydus" => config
+           }
+         } = resource
+       ) do
+    gen_deployment(name, ns, annotations, config, resource)
   end
 
   alias NydusOperator.Resource.Default.Deployment
 
-  defp gen_deployment(name, ns, labels, annotations, config) do
+  defp gen_deployment(name, ns, annotations, config, resource) do
     config =
       config
       |> get_nydus_values
 
-    Deployment.new(name, ns, labels, annotations, config)
+    Deployment.new(name, ns, annotations, config, resource)
   end
 
   defp get_nydus_values(nydus) do

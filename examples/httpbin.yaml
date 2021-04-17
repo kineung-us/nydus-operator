@@ -8,7 +8,7 @@ spec:
       # checkout dapr 1.1.0 annotation docs
       # https://docs.dapr.io/operations/hosting/kubernetes/kubernetes-annotations/
       dapr.io/enabled: "true"
-      dapr.io/log-as-json: "true"
+      dapr.io/log-as-json: "false"
       dapr.io/log-level: "info"
       dapr.io/sidecar-cpu-limit: 300m
       dapr.io/sidecar-memory-limit: 1000Mi

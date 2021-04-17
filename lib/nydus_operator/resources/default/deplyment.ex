@@ -1,22 +1,22 @@
 defmodule NydusOperator.Resource.Default.Deployment do
-  def new(name, ns, labels_from_crd, anno_from_crd, config) do
+  def new(name, ns, anno_from_crd, config, resource) do
     %{
       "apiVersion" => "apps/v1",
       "kind" => "Deployment",
       "metadata" => %{
         "name" => name,
         "namespace" => ns,
-        "labels" => labels(name, config, labels_from_crd)
+        "labels" => labels(name, config, resource["metadata"]["labels"])
       },
       "spec" => %{
         "replicas" => 1,
         "selector" => %{
-          "matchLabels" => labels(name, config, labels_from_crd)
+          "matchLabels" => labels(name, config, resource["metadata"]["labels"])
         },
         "template" => %{
           "metadata" => %{
             "annotations" => annotations(name, config, anno_from_crd),
-            "labels" => labels(name, config, labels_from_crd)
+            "labels" => labels(name, config, resource["metadata"]["labels"])
           },
           "spec" => %{
             "securityContext" => %{
@@ -44,7 +44,7 @@ defmodule NydusOperator.Resource.Default.Deployment do
                 "readinessProbe" => %{
                   "httpGet" => %{
                     "path" => "/",
-                    "port" => "nydus-http",
+                    "port" => String.to_integer(config["http-port"]),
                     "scheme" => "HTTP"
                   }
                 },
@@ -94,7 +94,16 @@ defmodule NydusOperator.Resource.Default.Deployment do
     )
   end
 
-  defp labels(name, config, from_crd) do
+  defp labels(name, _config, nil) do
+    %{
+      "app.kubernetes.io/instance" => "nydus-" <> name,
+      "app.kubernetes.io/name" => "nydus-external",
+      "app.kubernetes.io/version" => Application.fetch_env!(:nydus_operator, :nydus_version),
+      "app.kubernetes.io/managed-by" => "nydus-operator"
+    }
+  end
+
+  defp labels(name, _config, from_crd) do
     Map.merge(
       %{
         "app.kubernetes.io/instance" => "nydus-" <> name,

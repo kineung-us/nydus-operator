@@ -24,7 +24,7 @@ be found at [https://hexdocs.pm/nydus_operator](https://hexdocs.pm/nydus_operato
 ```
 kubectl delete -f ./manifest.yaml
 rm manifest.yaml
-mix bonny.gen.manifest
+APP_VERSION=dev mix bonny.gen.manifest
 kubectl apply -f ./manifest.yaml
-iex -S mix
+APP_VERSION=dev iex -S mix
 ```
