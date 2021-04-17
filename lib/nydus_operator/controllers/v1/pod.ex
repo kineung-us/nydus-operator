@@ -71,58 +71,74 @@
 #   @impl Bonny.Controller
 #   def add(payload) do
 #     track_event(:add, payload)
-#     resources = parse(payload)
-#     track_event(:change, resources)
+#     pod = parse(payload)
+#     track_event(:parsed, pod)
 
-#     if !is_nil(resources.pod) do
-#       with {:ok, _} <- K8s.Client.patch(resources.pod) |> run do
-#         :ok
-#       else
-#         {:error, error} -> {:error, error}
+#     if !is_nil(pod) do
+#       op = K8s.Client.patch(pod)
+#       track_event(:operation, op)
+
+#       case run(op) do
+#         {:ok, cre} ->
+#           track_event(:build, cre)
+
+#         {:error, error} ->
+#           track_event(:create_fail, error)
+
+#         _ ->
+#           track_event(:create_else, op)
 #       end
 #     end
 #   end
 
 #   @doc """
-#   Updates `deployment` and `configmap` resources.
+#   Creates a kubernetes `deployment` and `service` that runs a "Hello, World" app.
 #   """
 #   @spec modify(map()) :: :ok | :error
 #   @impl Bonny.Controller
 #   def modify(payload) do
-#     track_event(:modify, payload)
-#     resources = parse(payload)
-#     track_event(:change, resources)
-#     track_event(:patch, K8s.Client.patch(resources.pod))
+#     track_event(:add, payload)
+#     pod = parse(payload)
+#     track_event(:parsed, pod)
 
-#     if !is_nil(resources.pod) do
-#       with {:ok, _} <- K8s.Client.patch(resources.pod) |> run do
-#         :ok
-#       else
-#         {:error, error} -> {:error, error}
+#     if !is_nil(pod) do
+#       op = K8s.Client.patch(pod)
+#       track_event(:operation, op)
+
+#       case run(op) do
+#         {:ok, cre} ->
+#           track_event(:build, cre)
+
+#         {:error, error} ->
+#           track_event(:create_fail, error)
+
+#         _ ->
+#           track_event(:create_else, op)
 #       end
 #     end
 #   end
 
 #   defp parse(%{"metadata" => %{"annotations" => annotations}} = resource) do
-#     pod = annotations
-#       |> get_nydus_values()
-#       |> case do
-#         %{"enabled" => "true"} = config ->
-#           Map.merge(resource, %{"spec" => %{"containers" => [ set_container(config) ]}})
-#         %{"enabled" => "false"} -> nil
-#         _ -> nil
-#       end
+#     annotations
+#     |> get_nydus_values()
+#     |> case do
+#       %{"enabled" => "true"} = config ->
+#         Map.merge(resource, %{"spec" => %{"containers" => [set_container(config)]}})
 
-#     %{
-#       pod: pod
-#     }
+#       %{"enabled" => "false"} ->
+#         nil
+
+#       _ ->
+#         nil
+#     end
 #   end
 
 #   alias NydusOperator.Resource.Default.Pod
 
 #   defp set_container(config) do
 #     pod = Pod.new(config)
-#     Map.merge(Map.delete(pod, :env), rm_nil_env(pod.env))
+
+#     Map.merge(Map.delete(pod, "env"), rm_nil_env(pod["env"]))
 #     |> rm_nil()
 #   end
 
@@ -130,10 +146,10 @@
 #     annotation
 #     |> Enum.filter(fn {k, _} -> k =~ "nydus.mrchypark.github.io" end)
 #     |> Enum.map(fn {k, v} ->
-#         String.replace_prefix(k, "nydus.mrchypark.github.io/", "")
-#         |> (&({&1, v})).()
-#       end)
-#       |> Enum.into(%{})
+#       String.replace_prefix(k, "nydus.mrchypark.github.io/", "")
+#       |> (&{&1, v}).()
+#     end)
+#     |> Enum.into(%{})
 #   end
 
 #   defp rm_nil(pod) do
@@ -141,9 +157,10 @@
 #   end
 
 #   defp rm_nil_env(env) do
-#     %{env:
-#       (for %{name: k, value: v} <- env, !is_nil(v), do: %{name: k, value: v}) ++
-#       (for %{name: k, valueFrom: v} <- env, !is_nil(v), do: %{name: k, valueFrom: v})
+#     %{
+#       env:
+#         for(%{name: k, value: v} <- env, !is_nil(v), do: %{name: k, value: v}) ++
+#           for(%{name: k, valueFrom: v} <- env, !is_nil(v), do: %{name: k, valueFrom: v})
 #     }
 #   end
 

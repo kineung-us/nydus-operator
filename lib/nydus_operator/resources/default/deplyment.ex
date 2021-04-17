@@ -32,6 +32,7 @@ defmodule NydusOperator.Resource.Default.Deployment do
                   "runAsNonRoot" => true
                 },
                 "env" => env(config),
+                "imagePullPolicy" => "Always",
                 "image" =>
                   "mrchypark/nydus:" <> Application.fetch_env!(:nydus_operator, :nydus_version),
                 "livenessProbe" => %{
