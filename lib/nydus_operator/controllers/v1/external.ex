@@ -64,6 +64,7 @@ defmodule NydusOperator.Controller.V1.External do
     resources = parse(payload)
     tem = K8s.Client.create(resources.deployment)
     track_event(:modify_template, tem)
+
     with tem |> run do
       :ok
     else
@@ -81,6 +82,7 @@ defmodule NydusOperator.Controller.V1.External do
     resources = parse(payload)
     tem = K8s.Client.patch(resources.deployment)
     track_event(:modify_template, tem)
+
     with tem |> run do
       :ok
     else
@@ -105,38 +107,13 @@ defmodule NydusOperator.Controller.V1.External do
   end
 
   defp parse(%{
-         "metadata" => %{"name" => name, "namespace" => ns},
+         "metadata" => %{"name" => name, "namespace" => ns, "labels" => labels},
          "spec" => %{
-            "metadata" => %{"annotations" => annotations},
-            "nydus" => config
-          }
-          }) do
-    deployment = gen_deployment(name, ns, annotations, config)
-    # deployment = %{
-    #   "apiVersion" => "apps/v1",
-    #   "kind" => "Deployment",
-    #   "metadata" => %{
-    #     "labels" => %{"app" => "nginx"},
-    #     "name" => "nginx-deployment",
-    #     "namespace" => "default"
-    #   },
-    #   "spec" => %{
-    #     "replicas" => 3,
-    #     "selector" => %{"matchLabels" => %{"app" => "nginx"}},
-    #     "template" => %{
-    #       "metadata" => %{"labels" => %{"app" => "nginx"}},
-    #       "spec" => %{
-    #         "containers" => [
-    #           %{
-    #             "image" => "nginx:1.7.9",
-    #             "name" => "nginx",
-    #             "ports" => [%{"containerPort" => 80}]
-    #           }
-    #         ]
-    #       }
-    #     }
-    #   }
-    # }
+           "metadata" => %{"annotations" => annotations},
+           "nydus" => config
+         }
+       }) do
+    deployment = gen_deployment(name, ns, labels, annotations, config)
 
     %{
       deployment: deployment
@@ -145,11 +122,12 @@ defmodule NydusOperator.Controller.V1.External do
 
   alias NydusOperator.Resource.Default.Deployment
 
-  defp gen_deployment(name, ns, annotations, config) do
-    config = config
-    |> get_nydus_values
+  defp gen_deployment(name, ns, labels, annotations, config) do
+    config =
+      config
+      |> get_nydus_values
 
-    Deployment.new(name, ns, annotations, config)
+    Deployment.new(name, ns, labels, annotations, config)
   end
 
   defp get_nydus_values(nydus) do
@@ -172,109 +150,14 @@ defmodule NydusOperator.Controller.V1.External do
   defp to_list_of_tuples(m) do
     m
     |> Enum.map(&process/1)
-    |> List.flatten
+    |> List.flatten()
   end
 
   defp process({key, sub_map}) when is_map(sub_map) do
-    for { sub_key, value } <- flatten(sub_map) do
-      { "#{key}-#{sub_key}", value }
+    for {sub_key, value} <- flatten(sub_map) do
+      {"#{key}-#{sub_key}", value}
     end
   end
 
   defp process(next), do: next
 end
-
-
-
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: den-nydus
-#   labels:
-#     helm.sh/chart: nydus-0.0.5
-#     app.kubernetes.io/name: nydus
-#     app.kubernetes.io/instance: den
-#     app.kubernetes.io/version: "0.1.1"
-#     app.kubernetes.io/managed-by: "nydus-operator"
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app.kubernetes.io/name: nydus
-#       app.kubernetes.io/instance: den
-#   template:
-#     metadata:
-#       annotations:
-#         dapr.io/log-as-json: "true"
-#         dapr.io/enabled: "true"
-#         dapr.io/log-level: "info"
-#         dapr.io/app-id: "den-nydus"
-#         dapr.io/app-port: "5000"
-#         dapr.io/config: "tracing"
-#         dapr.io/sidecar-cpu-limit: 300m
-#         dapr.io/sidecar-memory-limit: 1000Mi
-#         dapr.io/sidecar-cpu-request: 100m
-#         dapr.io/sidecar-memory-request: 250Mi
-#         prometheus.io/scrape: "true"
-#         prometheus.io/port: "9090"
-#         prometheus.io/path: "/"
-#       labels:
-#         app.kubernetes.io/name: nydus
-#         app.kubernetes.io/instance: den
-#     spec:
-#       securityContext:
-#         fsGroup: 2000
-#       containers:
-#         - name: nydus
-#           securityContext:
-#             capabilities:
-#               drop:
-#               - ALL
-#             readOnlyRootFilesystem: true
-#             runAsNonRoot: true
-#           image: "mrchypark/nydus:0.0.5"
-#           imagePullPolicy: IfNotPresent
-#           env:
-#           - name: MY_POD_IP
-#             valueFrom:
-#               fieldRef:
-#                 fieldPath: status.podIP
-#           - name: DEBUG
-#             value: "false"
-#           - name: ADDRESS
-#             value: ":5000"
-#           - name: SOURCE_PUBSUB_NAME
-#             value: "pubsub"
-#           - name: SOURCE_TOPIC_NAME
-#             value: "httpbin"
-#           - name: VERSION
-#             value: "external"
-#           - name: TARGET_ROOT
-#             value: "https://httpbin.org"
-#           - name: PUBSUB_TTL
-#             value: "60"
-#           - name: INVOKE_TIMEOUT
-#             value: "60"
-#           - name: PUBLISH_TIMEOUT
-#             value: "5"
-#           - name: CALLBACK_TIMEOUT
-#             value: "5"
-#           ports:
-#             - name: http
-#               containerPort: 5000
-#               protocol: TCP
-#           livenessProbe:
-#             httpGet:
-#               path: /
-#               port: http
-#           readinessProbe:
-#             httpGet:
-#               path: /
-#               port: http
-#           resources:
-#             limits:
-#               cpu: 100m
-#               memory: 32Mi
-#             requests:
-#               cpu: 100m
-#               memory: 32Mi

@@ -1,113 +1,117 @@
 defmodule NydusOperator.Resource.Default.Deployment do
-  def new(name, ns, anno_from_crd, config) do
+  def new(name, ns, labels_from_crd, anno_from_crd, config) do
     %{
       "apiVersion" => "apps/v1",
       "kind" => "Deployment",
       "metadata" => %{
         "name" => name,
         "namespace" => ns,
-        "labels" => %{
-          "app.kubernetes.io/instance" => "nydus-" <> name,
-          "app.kubernetes.io/name" => "nydus-external",
-          "app.kubernetes.io/version" => Application.fetch_env!( :nydus_operator,  :nydus_version),
-          "app.kubernetes.io/managed-by" => "nydus-operator"
-        },
+        "labels" => labels(name, config, labels_from_crd)
       },
       "spec" => %{
         "replicas" => 1,
         "selector" => %{
-          "matchLabels" => %{
-            "app.kubernetes.io/instance" => "nydus-" <> name,
-            "app.kubernetes.io/name" => "nydus-external",
-            "app.kubernetes.io/version" => Application.fetch_env!( :nydus_operator,  :nydus_version),
-            "app.kubernetes.io/managed-by" => "nydus-operator"
-          }
+          "matchLabels" => labels(name, config, labels_from_crd)
         },
         "template" => %{
           "metadata" => %{
             "annotations" => annotations(name, config, anno_from_crd),
-            "labels" => %{
-              "app.kubernetes.io/instance" => "nydus-" <> name,
-              "app.kubernetes.io/name" => "nydus-external",
-              "app.kubernetes.io/version" => Application.fetch_env!( :nydus_operator,  :nydus_version),
-              "app.kubernetes.io/managed-by" => "nydus-operator"
-            }
+            "labels" => labels(name, config, labels_from_crd)
+          },
+          "spec" => %{
+            "securityContext" => %{
+              "fsGroup" => 2000
             },
-            "spec" => %{
-              "securityContext" => %{
-                "fsGroup" => 2000
-              },
-              "containers" => [
-                %{
-                  "securityContext" => %{
-                    "capabilities" => %{
-                      "drop" => ["ALL"]
-                    },
-                    "readOnlyRootFilesystem" => true,
-                    "runAsNonRoot" => true
+            "containers" => [
+              %{
+                "securityContext" => %{
+                  "capabilities" => %{
+                    "drop" => ["ALL"]
                   },
-                  "env" => env(config),
-                  "image" => "mrchypark/nydus:" <> Application.fetch_env!( :nydus_operator,  :nydus_version),
-                  "livenessProbe" => %{
-                    "httpGet" => %{
-                      "path" => "/",
-                      "port" => "nydus-http",
-                      "scheme" => "HTTP"
-                    }
+                  "readOnlyRootFilesystem" => true,
+                  "runAsNonRoot" => true
+                },
+                "env" => env(config),
+                "image" =>
+                  "mrchypark/nydus:" <> Application.fetch_env!(:nydus_operator, :nydus_version),
+                "livenessProbe" => %{
+                  "httpGet" => %{
+                    "path" => "/",
+                    "port" => "nydus-http",
+                    "scheme" => "HTTP"
+                  }
+                },
+                "readinessProbe" => %{
+                  "httpGet" => %{
+                    "path" => "/",
+                    "port" => "nydus-http",
+                    "scheme" => "HTTP"
+                  }
+                },
+                "name" => "nydus",
+                "ports" => [
+                  %{
+                    "name" => "nydus-http",
+                    "containerPort" => String.to_integer(config["http-port"])
+                  }
+                ],
+                "resources" => %{
+                  "limits" => %{
+                    "cpu" => "100m",
+                    "memory" => "32Mi"
                   },
-                  "readinessProbe" => %{
-                    "httpGet" => %{
-                      "path" => "/",
-                      "port" => String.to_integer(config["http-port"]),
-                      "scheme" => "HTTP"
-                    }
-                  },
-                  "name" => "nydus",
-                  "ports" => [
-                    %{
-                      "name" => "nydus-http",
-                      "containerPort" => String.to_integer(config["http-port"])
-                    }
-                  ],
-                  "resources" => %{
-                    "limits" => %{
-                      "cpu" => "100m",
-                      "memory" => "32Mi"
-                    },
-                    "requests" => %{
-                      "cpu" => "100m",
-                      "memory" => "32Mi"
-                    }
+                  "requests" => %{
+                    "cpu" => "100m",
+                    "memory" => "32Mi"
                   }
                 }
-              ]
-            }
+              }
+            ]
           }
+        }
       }
     }
     |> rm_nil
   end
 
   defp annotations(name, config, from_crd) do
-    Map.merge(%{
-      "dapr.io/enabled" => "true",
-      "dapr.io/app-id" => name,
-      "dapr.io/app-port" => config["http-port"],
-      "dapr.io/log-as-json" => "true",
-      "dapr.io/log-level" => "info",
-      "dapr.io/sidecar-cpu-limit" => "300m",
-      "dapr.io/sidecar-cpu-request" => "100m",
-      "dapr.io/sidecar-memory-limit" => "1000Mi",
-      "dapr.io/sidecar-memory-request" => "250Mi",
-      "prometheus.io/path" => "/",
-      "prometheus.io/port" => "9090",
-      "prometheus.io/scrape" => "true"
-      }, from_crd)
+    Map.merge(
+      %{
+        "dapr.io/enabled" => "true",
+        "dapr.io/app-id" => name,
+        "dapr.io/app-port" => config["http-port"],
+        "dapr.io/log-as-json" => "true",
+        "dapr.io/log-level" => "info",
+        "dapr.io/sidecar-cpu-limit" => "300m",
+        "dapr.io/sidecar-cpu-request" => "100m",
+        "dapr.io/sidecar-memory-limit" => "1000Mi",
+        "dapr.io/sidecar-memory-request" => "250Mi",
+        "prometheus.io/path" => "/",
+        "prometheus.io/port" => "9090",
+        "prometheus.io/scrape" => "true"
+      },
+      from_crd
+    )
+  end
+
+  defp labels(name, config, from_crd) do
+    Map.merge(
+      %{
+        "app.kubernetes.io/instance" => "nydus-" <> name,
+        "app.kubernetes.io/name" => "nydus-external",
+        "app.kubernetes.io/version" => Application.fetch_env!(:nydus_operator, :nydus_version),
+        "app.kubernetes.io/managed-by" => "nydus-operator"
+      },
+      from_crd
+    )
   end
 
   defp env(config) do
     [
-      %{"name" => "NYDUS_HOST_IP", "valueFrom" => %{"fieldRef" => %{"apiVersion" => "v1", "fieldPath" => "status.podIP"}}},
+      %{
+        "name" => "NYDUS_HOST_IP",
+        "valueFrom" => %{"fieldRef" => %{"apiVersion" => "v1", "fieldPath" => "status.podIP"}}
+      },
       %{"name" => "DEBUG", "value" => config["debug"]},
       %{"name" => "NYDUS_HTTP_PORT", "value" => config["http-port"]},
       %{"name" => "SUBSCRIBE_PUBSUB_NAME", "value" => config["subscribe-pubsub-name"]},
@@ -124,8 +128,10 @@ defmodule NydusOperator.Resource.Default.Deployment do
   end
 
   defp rm_nil_env(env) do
-      (for %{"name" => k, "value" => v} <- env, !empty_content(v), do: %{"name" => k, "value" => v}) ++
-      (for %{"name" => k, "valueFrom" => v} <- env, !empty_content(v), do: %{"name" => k, "valueFrom" => v})
+    for(%{"name" => k, "value" => v} <- env, !empty_content(v), do: %{"name" => k, "value" => v}) ++
+      for %{"name" => k, "valueFrom" => v} <- env,
+          !empty_content(v),
+          do: %{"name" => k, "valueFrom" => v}
   end
 
   defp empty_content(el) do

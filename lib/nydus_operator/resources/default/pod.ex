@@ -5,7 +5,10 @@ defmodule NydusOperator.Resource.Default.Pod do
       imagePullPolicy: "Always",
       name: "nyduso",
       env: [
-        %{name: "NYDUS_HOST_IP", valueFrom: %{fieldRef: %{apiVersion: "v1", fieldPath: "status.podIP"}}},
+        %{
+          name: "NYDUS_HOST_IP",
+          valueFrom: %{fieldRef: %{apiVersion: "v1", fieldPath: "status.podIP"}}
+        },
         %{name: "DEBUG", value: config["debug"]},
         %{name: "NYDUS_HTTP_PORT", value: config["nydus-http-port"]},
         %{name: "SUBSCRIBE_PUBSUB_NAME", value: config["subscribe-pubsub-name"]},
