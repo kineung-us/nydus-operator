@@ -8,6 +8,9 @@ ENV MIX_ENV=prod \
   MIX_HOME=/opt/mix \
   HEX_HOME=/opt/hex
 
+ARG APP_VERSION
+ENV APP_VERSION=${APP_VERSION}
+
 RUN mix local.hex --force && \
   mix local.rebar --force
 
