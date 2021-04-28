@@ -58,4 +58,4 @@ config :bonny,
 #   kubeconf_opts: []
 
 config :nydus_operator,
-  nydus_version: System.get_env("NYDUS_VERSION", "0.0.8")
+  nydus_version: System.get_env("NYDUS_VERSION", "0.0.11")

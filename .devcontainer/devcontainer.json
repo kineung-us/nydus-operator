@@ -3,43 +3,39 @@
 {
 	"name": "K8s & Helm with Elixir",
 	"dockerFile": "Dockerfile",
-
 	"remoteEnv": {
 		"SYNC_LOCALHOST_KUBECONFIG": "true"
 	},
-
 	"mounts": [
 		"source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind",
 		"source=${env:HOME}${env:USERPROFILE}/.kube,target=/usr/local/share/kube-localhost,type=bind"
 		// Uncomment the next line to also sync certs in your .minikube folder
 		// "source=${env:HOME}${env:USERPROFILE}/.minikube,target=/usr/local/share/minikube-localhost,type=bind"
 	],
-
 	// Set *default* container specific settings.json values on container create.
-	"settings": { 
+	"settings": {
 		"terminal.integrated.shell.linux": "/bin/zsh"
 	},
-
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"jakebecker.elixir-ls",
 		"ms-azuretools.vscode-docker",
 		"ms-kubernetes-tools.vscode-kubernetes-tools"
 	],
-
+	"containerEnv": {
+		"APP_VERSION": "0.0.1-dev"
+	},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
-
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "kubectl version",
-
+	"postCreateCommand": "mix deps.get",
 	// Uncomment when using a ptrace-based debugger like C++, Go, and Rust.
 	"runArgs": [
 		// Uncomment the next line to use Docker from inside the container. See https://aka.ms/vscode-remote/samples/docker-in-docker for details.
-		"-v", "${env:HOME}/.ssh/:/root/.ssh",
-	]
-
+		"-v",
+		"${env:HOME}/.ssh/:/home/vscode/.ssh",
+	],
 	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
 	// "overrideCommand": false,
-	// "remoteUser": "vscode"
+	"remoteUser": "vscode"
 }

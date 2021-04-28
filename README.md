@@ -29,3 +29,8 @@ APP_VERSION=0.0.1 mix bonny.gen.manifest
 kubectl apply -f ./manifest.yaml
 APP_VERSION=0.0.1 iex -S mix
 ```
+
+
+### ref
+
+logger: <https://akoutmos.com/post/elixir-logging-loki/>

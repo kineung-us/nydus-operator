@@ -45,4 +45,8 @@ RUN chown ${USERNAME}:root /usr/local/share/copy-kube-config.sh \
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 
-RUN mix local.hex --force
+ENV MIX_HOME=/opt/mix
+
+RUN mix local.hex --force \
+    && mix local.rebar --force \
+    && mix archive.install hex phx_new 1.5.8  --force
