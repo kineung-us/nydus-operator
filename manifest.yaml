@@ -6,11 +6,11 @@
     "labels": {
       "k8s-app": "nydus-operator"
     },
-    "name": "externals.nydus.mrchypark.github.io"
+    "name": "externals.nydus.kineung.us"
   },
   "spec": {
     "additionalPrinterColumns": [],
-    "group": "nydus.mrchypark.github.io",
+    "group": "nydus.kineung.us",
     "names": {
       "kind": "External",
       "plural": "externals",
@@ -48,7 +48,7 @@
     },
     {
       "apiGroups": [
-        "nydus.mrchypark.github.io"
+        "nydus.kineung.us"
       ],
       "resources": [
         "externals"

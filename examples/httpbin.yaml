@@ -1,4 +1,4 @@
-apiVersion: nydus.mrchypark.github.io/v1
+apiVersion: nydus.kineung.us/v1
 kind: External
 metadata:
   name: httpbin

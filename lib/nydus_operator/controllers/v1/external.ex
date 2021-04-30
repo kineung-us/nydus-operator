@@ -31,7 +31,7 @@ defmodule NydusOperator.Controller.V1.External do
   require Logger
   use Bonny.Controller
 
-  @group "nydus.mrchypark.github.io"
+  @group "nydus.kineung.us"
   @version "v1"
 
   @scope :namespaced
@@ -73,8 +73,9 @@ defmodule NydusOperator.Controller.V1.External do
       {:error, error} ->
         track_event(:create_fail, error)
 
-      _ ->
-        track_event(:create_else, op)
+      {:error, err1, err2} ->
+        track_event(:create_fail, err1)
+        track_event(:create_fail, err2)
     end
   end
 
@@ -121,8 +122,8 @@ defmodule NydusOperator.Controller.V1.External do
       {:error, error} ->
         track_event(:delete_fail, error)
 
-      _ ->
-        track_event(:delete_else, op)
+      {_, els} ->
+        track_event(:delete_else, els)
     end
   end
 

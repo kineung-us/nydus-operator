@@ -24,10 +24,10 @@ be found at [https://hexdocs.pm/nydus_operator](https://hexdocs.pm/nydus_operato
 ```
 kubectl delete -f ./manifest.yaml
 rm manifest.yaml
-APP_VERSION=0.0.1 mix compile 
-APP_VERSION=0.0.1 mix bonny.gen.manifest
+mix compile
+mix bonny.gen.manifest
 kubectl apply -f ./manifest.yaml
-APP_VERSION=0.0.1 iex -S mix
+K8S_DISCOVERY_TIMEOUT_default=999999 iex -S mix
 ```
 
 

@@ -21,8 +21,7 @@ defmodule NydusOperator.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:bonny, "~> 0.4.3"},
-      # {:bonny_plug, "~> 1.0"},
+      {:bonny, github: "coryodaniel/bonny", ref: "56da8e0aba248782ecbf5bc3e0a724be2ad1925e"},
       {:nested_filter, "~> 1.2.2"},
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev, :test], runtime: false},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},

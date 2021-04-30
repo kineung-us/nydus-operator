@@ -26,4 +26,4 @@ nydus_operator-*.tar
 # Temporary files for e.g. tests
 /tmp
 
-.elixir_ls/*
+.elixir_ls/
