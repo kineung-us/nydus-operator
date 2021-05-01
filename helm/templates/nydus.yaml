@@ -3,10 +3,10 @@ kind: CustomResourceDefinition
 metadata:
   labels:
     k8s-app: nydus-operator
-  name: externals.nydus.mrchypark.github.io
+  name: externals.nydus.kineung.us
 spec:
   additionalPrinterColumns: []
-  group: nydus.mrchypark.github.io
+  group: nydus.kineung.us
   names:
     kind: External
     plural: externals
@@ -18,7 +18,7 @@ spec:
   version: v1
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: ClusterRoleBindingx
 metadata:
   labels:
     k8s-app: nydus-operator
@@ -30,7 +30,6 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: nydus-operator
-    namespace: default
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -38,7 +37,6 @@ metadata:
   labels:
     k8s-app: nydus-operator
   name: nydus-operator
-  namespace: default
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -54,7 +52,7 @@ rules:
     verbs:
       - '*'
   - apiGroups:
-      - nydus.mrchypark.github.io
+      - nydus.kineung.us
     resources:
       - externals
     verbs:
@@ -66,3 +64,54 @@ rules:
     verbs:
       - '*'
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: nydus-operator
+  name: nydus-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: nydus-operator
+  template:
+    metadata:
+      labels:
+        k8s-app: nydus-operator
+    spec:
+      containers:
+      - env:
+        - name: MIX_ENV
+          value: prod
+        - name: BONNY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: BONNY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: BONNY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: BONNY_POD_SERVICE_ACCOUNT
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.serviceAccountName
+        image: mrchypark/nydus-operator:0.0.1
+        name: nydus-operator
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi
+          requests:
+            cpu: 200m
+            memory: 200Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 65534
+      serviceAccountName: nydus-operator
