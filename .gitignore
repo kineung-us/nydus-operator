@@ -27,3 +27,5 @@ nydus_operator-*.tar
 /tmp
 
 .elixir_ls/
+
+manifest.yaml
