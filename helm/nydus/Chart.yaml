@@ -3,20 +3,20 @@ name: nydus
 description: A Helm chart for Nydus on Kubernetes
 type: application
 ## version placeholder
-version: 0.0.1
+version: 0.1.0
 ## appVersion placeholder
-appVersion: "0.0.1"
+appVersion: "0.1.0"
 
 home: https://github.com/kineung-us/nydus-operator
 
 maintainers:
-- name: Chanyub Park
-  email: mrchypark@gmail.com
-  url: https://github.com/mrchypark
+  - name: Chanyub Park
+    email: mrchypark@gmail.com
+    url: https://github.com/mrchypark
 
 sources:
-- https://github.com/kineung-us/nydus
-- https://github.com/kineung-us/nydus-operator
+  - https://github.com/kineung-us/nydus
+  - https://github.com/kineung-us/nydus-operator
 
 dependencies:
   - name: dapr
