@@ -26,7 +26,7 @@ spec:
       containers:
         - name: nydus-sidecar-injector
           image: "{{ .Values.injector.image.registry }}/{{ .Values.injector.image.repository }}:{{ default .Chart.AppVersion .Values.injector.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.injector.image.pullPolicy }}
           volumeMounts:
             - mountPath: /etc/webhook/config
               name: webhook-config
@@ -35,7 +35,7 @@ spec:
               readOnly: true
           args:
             - /sidecarinjector
-            - --port={{ .Values.service.targetPort }}
+            - --port=8443
             - --sidecar-config-file=/etc/webhook/config/sidecarconfig.yaml
             - --mutation-config-file=/etc/webhook/config/mutationconfig.yaml
             - --cert-file-path=/etc/webhook/certs/tls.crt
@@ -46,7 +46,6 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
       volumes:
         - configMap:
             name: nydus-sidecar-injector-configmap

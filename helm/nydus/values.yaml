@@ -2,7 +2,7 @@ operactor:
   image:
     registry: kineung
     repository: nydus-operator
-    tag: ""
+    tag: "0.1.0"
 
   prometheus:
     enabled: false
@@ -26,7 +26,7 @@ injector:
     repository: generic-sidecar-injector
     tag: "0.4.1"
 
-  webhookFailurePolicy: Ignore
+  webhookFailurePolicy: Fail
 
   replicaCount: 1
   imagePullPolicy: IfNotPresent

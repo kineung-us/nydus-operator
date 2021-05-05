@@ -6,7 +6,7 @@ spec:
   type: ClusterIP
   ports:
     - port: 443
-      targetPort: https
+      targetPort: 8443
       protocol: TCP
       name: https
   selector:
