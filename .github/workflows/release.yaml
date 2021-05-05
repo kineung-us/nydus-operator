@@ -35,7 +35,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
-          lint: off
+          linting: off
           target_dir: docs
           app_version: ${{ steps.docker_meta.outputs.version }}
           chart_version: ${{ steps.docker_meta.outputs.version }}
