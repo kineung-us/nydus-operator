@@ -28,7 +28,7 @@ injector:
 
   webhookFailurePolicy: Fail
 
-  replicaCount: 1
+  replicaCount: 2
   imagePullPolicy: IfNotPresent
   imagePullSecrets: ""
   nodeSelector: {}
