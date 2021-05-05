@@ -31,11 +31,12 @@ jobs:
           tags: |
             type=semver,pattern={{version}}
       - name: Publish Helm charts
-        uses: stefanprodan/helm-gh-pages@v1.4.1
+        uses: stefanprodan/helm-gh-pages@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
           linting: off
+          charts_dir: helm
           target_dir: docs
           app_version: ${{ steps.docker_meta.outputs.version }}
           chart_version: ${{ steps.docker_meta.outputs.version }}
