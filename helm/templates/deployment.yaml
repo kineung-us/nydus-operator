@@ -17,7 +17,7 @@ spec:
         app.kubernetes.io/version: {{ .Values.image.tag }}
         app.kubernetes.io/component: operator
         app.kubernetes.io/part-of: "nydus"
-        app.kubernetes.io/managed-by: "helm"
+        app.kubernetes.io/managed-by: "Helm"
 {{- if eq .Values.prometheus.enabled true }}
       annotations:
         prometheus.io/scrape: "{{ .Values.prometheus.enabled }}"
@@ -66,7 +66,7 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets }}
 {{- end }}
-{{- if .Values.global.nodeSelector }}
+{{- if .Values.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.global.nodeSelector | indent 8 }}
+{{ toYaml .Values.nodeSelector | indent 8 }}
 {{- end }}
