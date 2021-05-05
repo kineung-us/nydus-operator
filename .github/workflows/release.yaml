@@ -1,4 +1,4 @@
-name: release
+name: Release Helm
 on:
   push:
     tags:
@@ -21,6 +21,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           linting: off
-          charts_dir: helm
+          charts_dir: ./helm
           app_version: ${{ steps.docker_meta.outputs.version }}
           chart_version: ${{ steps.docker_meta.outputs.version }}
