@@ -28,9 +28,9 @@ jobs:
           images: kineung/nydus-operator
           tags: |
             type=semver,pattern={{version}}
-            
+
       - name: Publish Helm charts
-        uses: stefanprodan/helm-gh-pages@master
+        uses: stefanprodan/helm-gh-pages@1.4.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
