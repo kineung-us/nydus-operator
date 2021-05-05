@@ -17,9 +17,10 @@ jobs:
           tags: |
             type=semver,pattern={{version}}
       - name: Publish Helm charts
-        uses: stefanprodan/helm-gh-pages@master
+        uses: stefanprodan/helm-gh-pages@v1.4.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          linting: off
           charts_dir: helm
           app_version: ${{ steps.docker_meta.outputs.version }}
           chart_version: ${{ steps.docker_meta.outputs.version }}
