@@ -1,0 +1,27 @@
+apiVersion: v1
+entries:
+  nydus:
+  - apiVersion: v2
+    appVersion: 0.1.1-rc10
+    created: "2021-05-05T18:21:39.942643646Z"
+    dependencies:
+    - condition: dapr.enabled
+      name: dapr
+      repository: https://dapr.github.io/helm-charts/
+      version: 1.1.2
+    description: A Helm chart for Nydus on Kubernetes
+    digest: eae390dd86300c53823afebb7193724bd5819d9b486d51c3ab1d001566c47bd0
+    home: https://github.com/kineung-us/nydus-operator
+    maintainers:
+    - email: mrchypark@gmail.com
+      name: Chanyub Park
+      url: https://github.com/mrchypark
+    name: nydus
+    sources:
+    - https://github.com/kineung-us/nydus
+    - https://github.com/kineung-us/nydus-operator
+    type: application
+    urls:
+    - https://kineung-us.github.io/nydus-operator/nydus-0.1.1-rc10.tgz
+    version: 0.1.1-rc10
+generated: "2021-05-05T18:21:39.940207516Z"
