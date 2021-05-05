@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nydus-sidecar-injector
+  name: nydus-sidecar-injector
+spec:
+  replicas: {{ .Values.operactor.replicaCount }}
+  selector:
+    matchLabels:
+      app: nydus-sidecar-injector
+  template:
+    metadata:
+      labels:
+        app: nydus-sidecar-injector
+        app.kubernetes.io/name: {{ .Release.Name }}
+        app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.injector.image.tag }}
+        app.kubernetes.io/component: sidecar-injector
+        app.kubernetes.io/part-of: "nydus"
+        app.kubernetes.io/managed-by: "Helm"
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+        - name: nydus-sidecar-injector
+          image: "{{ .Values.injector.image.registry }}/{{ .Values.injector.image.repository }}:{{ default .Chart.AppVersion .Values.injector.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - mountPath: /etc/webhook/config
+              name: webhook-config
+            - name: webhook-certs
+              mountPath: /etc/webhook/certs
+              readOnly: true
+          args:
+            - /sidecarinjector
+            - --port={{ .Values.service.targetPort }}
+            - --sidecar-config-file=/etc/webhook/config/sidecarconfig.yaml
+            - --mutation-config-file=/etc/webhook/config/mutationconfig.yaml
+            - --cert-file-path=/etc/webhook/certs/tls.crt
+            - --key-file-path=/etc/webhook/certs/tls.key
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      volumes:
+        - configMap:
+            name: nydus-sidecar-injector-configmap
+          name: webhook-config
+        - name: webhook-certs
+          secret:
+            secretName: nydus-sidecar-injector-cert

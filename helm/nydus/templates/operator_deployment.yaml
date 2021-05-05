@@ -5,7 +5,7 @@ metadata:
     app: nydus-operator
   name: nydus-operator
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.operactor.replicaCount }}
   selector:
     matchLabels:
       app: nydus-operator
@@ -14,14 +14,14 @@ spec:
       labels:
         app: nydus-operator
         app.kubernetes.io/name: {{ .Release.Name }}
-        app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.image.tag }}
+        app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.operactor.image.tag }}
         app.kubernetes.io/component: operator
         app.kubernetes.io/part-of: "nydus"
         app.kubernetes.io/managed-by: "Helm"
-{{- if eq .Values.prometheus.enabled true }}
+{{- if eq .Values.operactor.prometheus.enabled true }}
       annotations:
-        prometheus.io/scrape: "{{ .Values.prometheus.enabled }}"
-        prometheus.io/port: "{{ .Values.prometheus.port }}"
+        prometheus.io/scrape: "{{ .Values.operactor.prometheus.enabled }}"
+        prometheus.io/port: "{{ .Values.operactor.prometheus.port }}"
         prometheus.io/path: "/"
 {{- end }}
     spec:
@@ -45,28 +45,28 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.serviceAccountName
-        image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        image: "{{ .Values.operactor.image.registry }}/{{ .Values.operactor.image.repository }}:{{ default .Chart.AppVersion .Values.operactor.image.tag }}"
+        imagePullPolicy: {{ .Values.operactor.imagePullPolicy }}
         name: nydus-operator
-{{- if eq .Values.prometheus.enabled true }}
+{{- if eq .Values.operactor.prometheus.enabled true }}
         ports:
         - name: metrics
-          containerPort: {{ .Values.prometheus.port }}
+          containerPort: {{ .Values.operactor.prometheus.port }}
           protocol: TCP
 {{- end }}
         resources:
-{{ toYaml .Values.resources | indent 10 }}
+{{ toYaml .Values.operactor.resources | indent 10 }}
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
       serviceAccountName: nydus-operator
-{{- if .Values.imagePullSecrets }}
+{{- if .Values.operactor.imagePullSecrets }}
       imagePullSecrets:
-        - name: {{ .Values.imagePullSecrets }}
+        - name: {{ .Values.operactor.imagePullSecrets }}
 {{- end }}
-{{- if .Values.nodeSelector }}
+{{- if .Values.operactor.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
+{{ toYaml .Values.operactor.nodeSelector | indent 8 }}
 {{- end }}

@@ -1,0 +1,77 @@
+apiVersion: v1
+data:
+  mutationconfig.yaml: |
+    mutationConfigs:
+      - name: "nydus-sidecar"
+        annotationNamespace: "nydus.kineung.us"
+        annotationTrigger: "inject"
+        containers: ["nydus"]
+  sidecarconfig.yaml: |
+    containers:
+      - name: nydus
+        image: kineung/nydus
+        env:
+        - name: NYDUS_HOST_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: DEBUG
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.annotations['nydus.kineung.us/debug']
+        - name: NYDUS_HTTP_PORT
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.annotations['nydus.kineung.us/http-port']
+        - name: SUBSCRIBE_PUBSUB_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.annotations['nydus.kineung.us/subscribe-pubsub-name']
+        - name: SUBSCRIBE_TOPIC_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.annotations['nydus.kineung.us/subscribe-topic-name']
+        - name: PUBLISH_PUBSUB_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.annotations['nydus.kineung.us/publish-pubsub-name']
+        - name: PUBLISH_PUBSUB_TTL
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.annotations['nydus.kineung.us/publish-pubsub-ttl-seconds']
+        - name: TARGET_ROOT
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.annotations['nydus.kineung.us/target-root']
+        - name: TARGET_VERSION
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.annotations['nydus.kineung.us/target-version']
+        - name: INVOKE_TIMEOUT
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.annotations['nydus.kineung.us/invoke-timeout-seconds']
+        - name: PUBLISH_TIMEOUT
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.annotations['nydus.kineung.us/publish-timeout-seconds']
+        - name: CALLBACK_TIMEOUT
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.annotations['nydus.kineung.us/callback-timeout-seconds']
+kind: ConfigMap
+metadata:
+  name: nydus-sidecar-injector-configmap
+  namespace: { { .Release.Namespace } }

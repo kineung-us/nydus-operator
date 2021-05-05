@@ -1,0 +1,50 @@
+{{- $existingSecret := lookup "v1" "Secret" .Release.Namespace "nydus-sidecar-injector-cert"}}
+{{- $existingWebHookConfig := lookup "admissionregistration.k8s.io/v1" "MutatingWebhookConfiguration" .Release.Namespace "nydus-sidecar-injector"}}
+{{- $ca := genCA "nydus-sidecar-injector-ca" 3650 }}
+{{- $cn := printf "nydus-sidecar-injector" }}
+{{- $altName1 := printf "nydus-sidecar-injector.%s" .Release.Namespace }}
+{{- $altName2 := printf "nydus-sidecar-injector.%s.svc" .Release.Namespace }}
+{{- $altName3 := printf "nydus-sidecar-injector.%s.svc.cluster" .Release.Namespace }}
+{{- $altName4 := printf "nydus-sidecar-injector.%s.svc.cluster.local" .Release.Namespace }}
+{{- $cert := genSignedCert $cn nil (list $altName1 $altName2 $altName3 $altName4) 3650 $ca }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nydus-sidecar-injector-cert
+  labels:
+    app: nydus-sidecar-injector
+data:
+  {{ if $existingSecret }}tls.crt: {{ index $existingSecret.data "tls.crt" }}
+  {{ else }}tls.crt: {{ b64enc $cert.Cert }}
+  {{ end }}
+
+  {{ if $existingSecret }}tls.key: {{ index $existingSecret.data "tls.key" }}
+  {{ else }}tls.key: {{ b64enc $cert.Key }}
+  {{ end }}
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: nydus-sidecar-injector
+  labels:
+    app: nydus-sidecar-injector
+webhooks:
+- name: sidecar-injector.nydus.kineung.us
+  clientConfig:
+    service:
+      namespace: {{ .Release.Namespace }}
+      name: nydus-sidecar-injector
+      path: "/mutate"
+    caBundle: {{ if $existingWebHookConfig }}{{ (index $existingWebHookConfig.webhooks 0).clientConfig.caBundle }}{{ else }}{{ b64enc $ca.Cert }}{{ end }}
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    resources:
+    - pods
+    operations:
+    - CREATE
+  failurePolicy: {{ .Values.injector.webhookFailurePolicy}}
+  sideEffects: None
+  admissionReviewVersions: ["v1", "v1beta1"]

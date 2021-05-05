@@ -1,23 +1,44 @@
-image:
-  registry: kineung
-  repository: nydus-operator
-  tag: ""
+operactor:
+  image:
+    registry: kineung
+    repository: nydus-operator
+    tag: ""
 
-prometheus:
-  enabled: false
-  port: 9090
+  prometheus:
+    enabled: false
+    port: 9090
 
-replicaCount: 1
-imagePullPolicy: IfNotPresent
-imagePullSecrets: ""
-nodeSelector: {}
-resources:
-  limits:
-    cpu: 200m
-    memory: 200Mi
-  requests:
-    cpu: 200m
-    memory: 200Mi
+  replicaCount: 1
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets: ""
+  nodeSelector: {}
+  resources:
+    limits:
+      cpu: 200m
+      memory: 200Mi
+    requests:
+      cpu: 200m
+      memory: 200Mi
+
+injector:
+  image:
+    registry: mrchypark
+    repository: generic-sidecar-injector
+    tag: "0.4.1"
+
+  webhookFailurePolicy: Ignore
+
+  replicaCount: 1
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets: ""
+  nodeSelector: {}
+  resources:
+    limits:
+      cpu: 200m
+      memory: 200Mi
+    requests:
+      cpu: 200m
+      memory: 200Mi
 
 dapr:
   enabled: false
