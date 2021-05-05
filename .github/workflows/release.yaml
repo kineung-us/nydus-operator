@@ -8,7 +8,21 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.4.0
+
       - name: Docker meta
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v2.4.0
@@ -20,6 +34,8 @@ jobs:
         uses: stefanprodan/helm-gh-pages@v1.4.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          charts_dir: ./helm
+          branch: main
+          lint: off
+          target_dir: docs
           app_version: ${{ steps.docker_meta.outputs.version }}
           chart_version: ${{ steps.docker_meta.outputs.version }}
