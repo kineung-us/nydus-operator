@@ -73,6 +73,24 @@ defmodule NydusOperator.Resource.Default.Deployment do
       }
     }
     |> rm_nil
+    |> setup_containers(resource["spec"]["containers"])
+    |> setup_hostAliases(resource["spec"]["hostAliases"])
+  end
+
+  defp setup_hostAliases(deploy, nil) do
+    deploy
+  end
+
+  defp setup_hostAliases(deploy, hostAliases) do
+    Map.merge(deploy, %{"spec" => %{"template" => %{"spec" => %{"hostAliases" => hostAliases}}}})
+  end
+
+  defp setup_containers(deploy, nil) do
+    deploy
+  end
+
+  defp setup_containers(deploy, containers) do
+    Map.merge(deploy, %{"spec" => %{"template" => %{"spec" => %{"containers" => containers}}}})
   end
 
   defp annotations(name, config, from_crd) do

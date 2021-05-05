@@ -27,19 +27,25 @@ spec:
       prometheus.io/port: "9090"
       prometheus.io/path: "/"
   nydus:
-    containers:
-      image: "mrchypark/nydus:0.0.8"
-    debug: "false" # default set
-    port: "5000" # default set
-    pubsub:
-      name: "" # required
-      # TODO : need to set same metadata.name default but set work
-      topic: "" # required
-      ttl: "60" # default set
+    http:
+      port: "5000" # default set
+    publish:
+      pubsub:
+        name: "pubsub" # required
+        ttl: 
+          seconds: "60" # default set
+    subscribe:
+      pubsub:
+        name: "pubsub"
+      topic:
+        name: "httpbin"
     target:
-      root: "" # required
+      root: "https://httpbin.org/" # required
       version: "external" # default set
     timeout:
-      invoke: "60" # default set
-      publish: "3" # default set
-      callback: "3" # default set
+      invoke: 
+        seconds: "60" # default set
+      publish: 
+        seconds: "3" # default set
+      callback: 
+        seconds: "3" # default set

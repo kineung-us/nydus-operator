@@ -17,6 +17,19 @@ spec:
       prometheus.io/scrape: "true"
       prometheus.io/port: "9090"
       prometheus.io/path: "/"
+  hostAliases:
+    - ip: "61.250.23.70"
+      hostnames:
+        - "cspapi.sktelecom.com"
+    - ip: "203.236.9.66"
+      hostnames:
+        - "skt-cbptap11.sktelecom.com"
+    - ip: "61.250.19.37"
+      hostnames:
+        - "icp-stg.tworld.co.kr"
+    - ip: "61.250.19.58"
+      hostnames:
+        - "api.shop.tworld.co.kr"
   nydus:
     http:
       port: "5000" # default set

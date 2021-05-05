@@ -1,0 +1,97 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    k8s-app: nydus-operator
+  name: externals.nydus.kineung.us
+spec:
+  group: nydus.kineung.us
+  names:
+    kind: External
+    plural: externals
+    shortNames:
+      - ext
+      - extl
+    singular: external
+  scope: Namespaced
+  versions:
+  - name: v1
+    served: true
+    storage: true
+    additionalPrinterColumns:
+    - name: Target
+      type: string
+      description: External target url
+      jsonPath: .spec.nydus.target.root
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              hostAliases:
+                type: object
+              containers:
+                type: object
+              metadata:
+                type: object
+                properties:
+                  annotations:
+                    type: object
+              nydus:
+                type: object
+                properties:
+                  http:
+                    type: object
+                    properties:
+                      port:
+                        type: string
+                  publish:
+                    type: object
+                    properties:
+                      pubsub:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          ttl:
+                            type: object
+                            properties:
+                              seconds:
+                                type: string
+                  subscribe:
+                    type: object
+                    properties:
+                      pubsub:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          topic:
+                            type: string
+                  target:
+                    type: object
+                    properties:
+                      root:
+                        type: string
+                      version:
+                        type: string
+                  timeout:
+                    type: object
+                    properties:
+                      invoke:
+                        type: object
+                        properties:
+                          seconds:
+                            type: string
+                      publish:
+                        type: object
+                        properties:
+                          seconds:
+                            type: string
+                      callback:
+                        type: object
+                        properties:
+                          seconds:
+                            type: string
