@@ -2,17 +2,28 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    k8s-app: nydus-operator
+    app: nydus-operator
   name: nydus-operator
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      k8s-app: nydus-operator
+      app: nydus-operator
   template:
     metadata:
       labels:
-        k8s-app: nydus-operator
+        app: nydus-operator
+        app.kubernetes.io/name: {{ .Release.Name }}
+        app.kubernetes.io/version: {{ .Values.image.tag }}
+        app.kubernetes.io/component: operator
+        app.kubernetes.io/part-of: "nydus"
+        app.kubernetes.io/managed-by: "helm"
+{{- if eq .Values.prometheus.enabled true }}
+      annotations:
+        prometheus.io/scrape: "{{ .Values.prometheus.enabled }}"
+        prometheus.io/port: "{{ .Values.prometheus.port }}"
+        prometheus.io/path: "/"
+{{- end }}
     spec:
       containers:
       - env:
@@ -34,18 +45,28 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.serviceAccountName
-        image: kineung/nydus-operator:0.1.0
+        image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
         name: nydus-operator
+{{- if eq .Values.prometheus.enabled true }}
+        ports:
+        - name: metrics
+          containerPort: {{ .Values.prometheus.port }}
+          protocol: TCP
+{{- end }}
         resources:
-          limits:
-            cpu: 200m
-            memory: 200Mi
-          requests:
-            cpu: 200m
-            memory: 200Mi
+{{ toYaml .Values.resources | indent 10 }}
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
       serviceAccountName: nydus-operator
+{{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets }}
+{{- end }}
+{{- if .Values.global.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.global.nodeSelector | indent 8 }}
+{{- end }}
