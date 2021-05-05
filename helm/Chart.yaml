@@ -2,14 +2,21 @@ apiVersion: v2
 name: nydus
 description: A Helm chart for Nydus on Kubernetes
 type: application
-version: 0.1.1
-appVersion: "0.1.1"
+## version placeholder
+version: 0.0.1
+## appVersion placeholder
+appVersion: "0.0.1"
 
 home: https://github.com/kineung-us/nydus-operator
 
 maintainers:
 - name: Chanyub Park
   email: mrchypark@gmail.com
+  url: https://github.com/mrchypark
+
+sources:
+- https://github.com/kineung-us/nydus
+- https://github.com/kineung-us/nydus-operator
 
 dependencies:
   - name: dapr

@@ -9,9 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Docker meta
+        id: docker_meta
+        uses: crazy-max/ghaction-docker-meta@v2.4.0
+        with:
+          images: kineung/nydus-operator
+          tags: |
+            type=semver,pattern={{version}}
       - name: Publish Helm charts
         uses: stefanprodan/helm-gh-pages@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           charts_dir: helm
-          
+          app_version: ${{ steps.docker_meta.outputs.version }}
+          chart_version: ${{ steps.docker_meta.outputs.version }}

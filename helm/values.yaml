@@ -1,7 +1,7 @@
 image:
   registry: kineung
   repository: nydus-operator
-  tag: "0.1.1"
+  tag: ""
 
 prometheus:
   enabled: false
