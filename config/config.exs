@@ -12,7 +12,4 @@ config :bonny,
 
 # api_version: "apiextensions.k8s.io/v1"
 
-config :nydus_operator,
-  nydus_version: System.get_env("NYDUS_VERSION", "0.0.11")
-
 import_config "#{Mix.env()}.exs"

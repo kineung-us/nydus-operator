@@ -27,6 +27,8 @@ spec:
     spec:
       containers:
       - env:
+        - name: K8S_DISCOVERY_TIMEOUT_default
+          value: 999999
         - name: MIX_ENV
           value: prod
         - name: BONNY_POD_NAME

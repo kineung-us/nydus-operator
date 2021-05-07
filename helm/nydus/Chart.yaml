@@ -3,9 +3,9 @@ name: nydus
 description: A Helm chart for Nydus on Kubernetes
 type: application
 ## version placeholder
-version: 0.1.0
+version: 0.1.1
 ## appVersion placeholder
-appVersion: "0.1.0"
+appVersion: "0.1.1"
 
 home: https://github.com/kineung-us/nydus-operator
 

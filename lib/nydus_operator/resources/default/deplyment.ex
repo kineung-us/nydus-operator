@@ -33,8 +33,7 @@ defmodule NydusOperator.Resource.Default.Deployment do
                 },
                 "env" => env(config),
                 "imagePullPolicy" => "Always",
-                "image" =>
-                  "mrchypark/nydus:" <> Application.fetch_env!(:nydus_operator, :nydus_version),
+                "image" => "mrchypark/nydus:" <> System.fetch_env!("APP_VERSION"),
                 "livenessProbe" => %{
                   "httpGet" => %{
                     "path" => "/",
@@ -45,7 +44,7 @@ defmodule NydusOperator.Resource.Default.Deployment do
                 "readinessProbe" => %{
                   "httpGet" => %{
                     "path" => "/",
-                    "port" => String.to_integer(config["http-port"]),
+                    "port" => "nydus-http",
                     "scheme" => "HTTP"
                   }
                 },
@@ -53,7 +52,7 @@ defmodule NydusOperator.Resource.Default.Deployment do
                 "ports" => [
                   %{
                     "name" => "nydus-http",
-                    "containerPort" => String.to_integer(config["http-port"])
+                    "containerPort" => 5000
                   }
                 ],
                 "resources" => %{
@@ -73,16 +72,25 @@ defmodule NydusOperator.Resource.Default.Deployment do
       }
     }
     |> rm_nil
+    |> setup_port(config["http-port"])
     |> setup_containers(resource["spec"]["containers"])
     |> setup_hostAliases(resource["spec"]["hostAliases"])
   end
 
-  defp setup_hostAliases(deploy, nil) do
+  defp setup_port(deploy, nil) do
     deploy
   end
 
-  defp setup_hostAliases(deploy, hostAliases) do
-    Map.merge(deploy, %{"spec" => %{"template" => %{"spec" => %{"hostAliases" => hostAliases}}}})
+  defp setup_port(deploy, port) do
+    Map.merge(deploy, %{
+      "spec" => %{
+        "template" => %{
+          "spec" => %{
+            "containers" => %{"ports" => [%{"name" => "nydus-http", "containerPort" => port}]}
+          }
+        }
+      }
+    })
   end
 
   defp setup_containers(deploy, nil) do
@@ -91,6 +99,14 @@ defmodule NydusOperator.Resource.Default.Deployment do
 
   defp setup_containers(deploy, containers) do
     Map.merge(deploy, %{"spec" => %{"template" => %{"spec" => %{"containers" => containers}}}})
+  end
+
+  defp setup_hostAliases(deploy, nil) do
+    deploy
+  end
+
+  defp setup_hostAliases(deploy, hostAliases) do
+    Map.merge(deploy, %{"spec" => %{"template" => %{"spec" => %{"hostAliases" => hostAliases}}}})
   end
 
   defp annotations(name, config, from_crd) do
@@ -117,7 +133,7 @@ defmodule NydusOperator.Resource.Default.Deployment do
     %{
       "app.kubernetes.io/instance" => "nydus-" <> name,
       "app.kubernetes.io/name" => "nydus-external",
-      "app.kubernetes.io/version" => Application.fetch_env!(:nydus_operator, :nydus_version),
+      "app.kubernetes.io/version" => System.fetch_env!("APP_VERSION"),
       "app.kubernetes.io/managed-by" => "nydus-operator"
     }
   end
@@ -127,7 +143,7 @@ defmodule NydusOperator.Resource.Default.Deployment do
       %{
         "app.kubernetes.io/instance" => "nydus-" <> name,
         "app.kubernetes.io/name" => "nydus-external",
-        "app.kubernetes.io/version" => Application.fetch_env!(:nydus_operator, :nydus_version),
+        "app.kubernetes.io/version" => System.fetch_env!("APP_VERSION"),
         "app.kubernetes.io/managed-by" => "nydus-operator"
       },
       from_crd

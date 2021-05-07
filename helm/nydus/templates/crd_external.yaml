@@ -29,16 +29,25 @@ spec:
         properties:
           spec:
             type: object
+            required:
+            - nydus
             properties:
               hostAliases:
-                type: object
+                type: array
+                items:
+                  type: object
+                  x-kubernetes-preserve-unknown-fields: true
               containers:
-                type: object
+                type: array
+                items:
+                  type: object
+                  x-kubernetes-preserve-unknown-fields: true
               metadata:
                 type: object
                 properties:
                   annotations:
                     type: object
+                    x-kubernetes-preserve-unknown-fields: true
               nydus:
                 type: object
                 properties:
@@ -46,7 +55,8 @@ spec:
                     type: object
                     properties:
                       port:
-                        type: string
+                        type: integer
+                        default: 5000
                   publish:
                     type: object
                     properties:
@@ -59,7 +69,7 @@ spec:
                             type: object
                             properties:
                               seconds:
-                                type: string
+                                type: integer
                   subscribe:
                     type: object
                     properties:
@@ -87,14 +97,14 @@ spec:
                         type: object
                         properties:
                           seconds:
-                            type: string
+                            type: integer
                       publish:
                         type: object
                         properties:
                           seconds:
-                            type: string
+                            type: integer
                       callback:
                         type: object
                         properties:
                           seconds:
-                            type: string
+                            type: integer
