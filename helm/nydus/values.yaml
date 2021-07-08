@@ -1,4 +1,5 @@
 operactor:
+  enabled: false
   image:
     registry: kineung
     repository: nydus-operator
@@ -21,6 +22,7 @@ operactor:
       memory: 200Mi
 
 injector:
+  enabled: true
   image:
     registry: mrchypark
     repository: generic-sidecar-injector

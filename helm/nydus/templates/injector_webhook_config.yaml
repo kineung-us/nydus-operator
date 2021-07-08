@@ -1,3 +1,4 @@
+{{- if .Values.injector.enabled -}}
 {{- $existingSecret := lookup "v1" "Secret" .Release.Namespace "nydus-sidecar-injector-cert"}}
 {{- $existingWebHookConfig := lookup "admissionregistration.k8s.io/v1" "MutatingWebhookConfiguration" .Release.Namespace "nydus-sidecar-injector"}}
 {{- $ca := genCA "nydus-sidecar-injector-ca" 3650 }}
@@ -55,3 +56,4 @@ webhooks:
   failurePolicy: {{ .Values.injector.webhookFailurePolicy}}
   sideEffects: None
   # admissionReviewVersions: ["v1", "v1beta1"]
+{{- end }}

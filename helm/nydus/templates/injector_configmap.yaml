@@ -1,3 +1,4 @@
+{{- if .Values.injector.enabled -}}
 apiVersion: v1
 data:
   mutationconfig.yaml: |
@@ -9,7 +10,7 @@ data:
   sidecarconfig.yaml: |
     containers:
         - name: nydus
-          image: kineung/nydus:0.1.2
+          image: kineung/nydus:0.1.3
           readinessProbe:
             httpGet:
               path: /
@@ -89,3 +90,4 @@ data:
 kind: ConfigMap
 metadata:
   name: nydus-sidecar-injector-configmap
+{{- end }}

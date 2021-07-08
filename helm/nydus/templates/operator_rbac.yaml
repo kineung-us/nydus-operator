@@ -1,3 +1,4 @@
+{{- if .Values.operactor.enabled -}}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -45,3 +46,4 @@ rules:
       - deployments
     verbs:
       - '*'
+{{- end }}
