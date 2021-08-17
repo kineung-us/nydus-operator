@@ -10,7 +10,7 @@ data:
   sidecarconfig.yaml: |
     containers:
         - name: nydus
-          image: kineung/nydus:0.1.3
+          image: kineung/nydus:0.1.7
           readinessProbe:
             httpGet:
               path: /healthz
