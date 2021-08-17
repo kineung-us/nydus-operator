@@ -13,11 +13,11 @@ data:
           image: kineung/nydus:0.1.3
           readinessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: 5000
           livenessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: 5000
           resources:
             requests:
