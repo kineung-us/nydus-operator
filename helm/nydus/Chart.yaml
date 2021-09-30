@@ -17,9 +17,3 @@ maintainers:
 sources:
   - https://github.com/kineung-us/nydus
   - https://github.com/kineung-us/nydus-operator
-
-dependencies:
-  - name: dapr
-    version: "1.2.2"
-    repository: "https://dapr.github.io/helm-charts/"
-    condition: dapr.enabled

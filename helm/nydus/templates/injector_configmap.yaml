@@ -10,7 +10,7 @@ data:
   sidecarconfig.yaml: |
     containers:
         - name: nydus
-          image: ghcr.io/kineung-us/nydus:0.1.8
+          image: "{{ .Values.injector.nydus.image.registry }}/{{ .Values.injector.nydus.image.repository }}:{{ .Values.injector.nydus.image.tag }}"
           readinessProbe:
             httpGet:
               path: /healthz

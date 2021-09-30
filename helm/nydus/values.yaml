@@ -27,6 +27,11 @@ injector:
     registry: mrchypark
     repository: generic-sidecar-injector
     tag: "0.4.1"
+  nydus: 
+    image:
+      registry: ghcr.io
+      repository: "kineung-us/nydus"
+      tag: "0.1.19"
 
   webhookFailurePolicy: Fail
 
@@ -41,8 +46,3 @@ injector:
     requests:
       cpu: 200m
       memory: 200Mi
-
-dapr:
-  enabled: false
-  global:
-    logAsJson: true
