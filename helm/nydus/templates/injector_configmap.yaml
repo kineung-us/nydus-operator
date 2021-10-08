@@ -67,6 +67,11 @@ data:
               fieldRef:
                 apiVersion: v1
                 fieldPath: metadata.annotations['nydus.kineung.us/target-root']
+          - name: TARGET_HEALTHZ_ADDR
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.annotations['nydus.kineung.us/target-healthz-addr']
           - name: TARGET_VERSION
             valueFrom:
               fieldRef:
