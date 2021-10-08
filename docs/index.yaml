@@ -3,9 +3,9 @@ entries:
   nydus:
   - apiVersion: v2
     appVersion: 0.1.21
-    created: "2021-10-08T19:42:50.700731774Z"
+    created: "2021-10-08T19:43:41.377359183Z"
     description: A Helm chart for Nydus on Kubernetes
-    digest: 30004492bd4f7f8c0e9609cdbe4d0e5e926ef55ea2a5a416a7d29b4c48000641
+    digest: fd2812cc803ba5817fae520c93359ee2017aa3d6ea15a627ffd3e6aef4a825a2
     home: https://github.com/kineung-us/nydus-operator
     maintainers:
     - email: mrchypark@gmail.com
@@ -21,7 +21,7 @@ entries:
     version: 0.1.21
   - apiVersion: v2
     appVersion: 0.1.20
-    created: "2021-10-08T19:42:50.700224853Z"
+    created: "2021-10-08T19:43:41.37675026Z"
     description: A Helm chart for Nydus on Kubernetes
     digest: 1b018d5813911a19c7c6ce90edff2c8f375153c1be7f56df1aa3cb440cf3d0cc
     home: https://github.com/kineung-us/nydus-operator
@@ -39,7 +39,7 @@ entries:
     version: 0.1.20
   - apiVersion: v2
     appVersion: 0.1.10
-    created: "2021-10-08T19:42:50.697911555Z"
+    created: "2021-10-08T19:43:41.373839646Z"
     description: A Helm chart for Nydus on Kubernetes
     digest: adb6c6c43b97b5838c0986cc67bc8a93b7cec777be1ce05eadfc672ba6dc1397
     home: https://github.com/kineung-us/nydus-operator
@@ -57,7 +57,7 @@ entries:
     version: 0.1.10
   - apiVersion: v2
     appVersion: 0.1.9
-    created: "2021-10-08T19:42:50.709474542Z"
+    created: "2021-10-08T19:43:41.388765229Z"
     description: A Helm chart for Nydus on Kubernetes
     digest: e090cff95afc1f6d1d9737f1395246fc76be8cecb48a0574201526088f21e35f
     home: https://github.com/kineung-us/nydus-operator
@@ -75,7 +75,7 @@ entries:
     version: 0.1.9
   - apiVersion: v2
     appVersion: 0.1.8
-    created: "2021-10-08T19:42:50.707655265Z"
+    created: "2021-10-08T19:43:41.38625033Z"
     dependencies:
     - condition: dapr.enabled
       name: dapr
@@ -98,7 +98,7 @@ entries:
     version: 0.1.8
   - apiVersion: v2
     appVersion: 0.1.7
-    created: "2021-10-08T19:42:50.705784686Z"
+    created: "2021-10-08T19:43:41.383538525Z"
     dependencies:
     - condition: dapr.enabled
       name: dapr
@@ -121,7 +121,7 @@ entries:
     version: 0.1.7
   - apiVersion: v2
     appVersion: 0.1.3
-    created: "2021-10-08T19:42:50.703917708Z"
+    created: "2021-10-08T19:43:41.379854981Z"
     dependencies:
     - condition: dapr.enabled
       name: dapr
@@ -144,7 +144,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 0.1.2
-    created: "2021-10-08T19:42:50.699707431Z"
+    created: "2021-10-08T19:43:41.376147236Z"
     dependencies:
     - condition: dapr.enabled
       name: dapr
@@ -167,7 +167,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2021-10-08T19:42:50.697401734Z"
+    created: "2021-10-08T19:43:41.373212322Z"
     dependencies:
     - condition: dapr.enabled
       name: dapr
@@ -190,7 +190,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2021-10-08T19:42:50.695513154Z"
+    created: "2021-10-08T19:43:41.370843229Z"
     dependencies:
     - condition: dapr.enabled
       name: dapr
@@ -211,4 +211,4 @@ entries:
     urls:
     - https://kineung-us.github.io/nydus-operator/nydus-0.1.0.tgz
     version: 0.1.0
-generated: "2021-10-08T19:42:50.693573173Z"
+generated: "2021-10-08T19:43:41.365367115Z"
