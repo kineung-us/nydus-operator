@@ -6,7 +6,7 @@ metadata:
     app: nydus-sidecar-injector
   name: nydus-sidecar-injector
 spec:
-  replicas: {{ .Values.operactor.replicaCount }}
+  replicas: {{ .Values.injector.replicaCount }}
   selector:
     matchLabels:
       app: nydus-sidecar-injector
