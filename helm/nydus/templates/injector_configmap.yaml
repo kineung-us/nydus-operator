@@ -92,6 +92,67 @@ data:
               fieldRef:
                 apiVersion: v1
                 fieldPath: metadata.annotations['nydus.kineung.us/callback-timeout-seconds']
+          - name: DAPR_HEALTHZ_ADDR
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.annotations['nydus.kineung.us/dapr-healthz-address']
+          - name: DAPR_HEALTHZ_TIMEOUT
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.annotations['nydus.kineung.us/dapr-healthz-timeout-seconds']
+          - name: CLIENT_READ_TIMEOUT
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.annotations['nydus.kineung.us/client-read-timeout-seconds']
+          - name: CLIENT_WRITE_TIMEOUT
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.annotations['nydus.kineung.us/client-write-timeout-seconds']
+          - name: CLIENT_MAX_CONNS_PER_HOST
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.annotations['nydus.kineung.us/client-maxConnsPerHost']
+          - name: CLIENT_HEADER_NORMALIZING
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.annotations['nydus.kineung.us/client-headerNormalizing']
+          - name: SERVER_READ_TIMEOUT
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.annotations['nydus.kineung.us/server-read-timeout-seconds']
+          - name: SERVER_WRITE_TIMEOUT
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.annotations['nydus.kineung.us/server-write-timeout-seconds']
+          - name: SERVER_IDLE_TIMEOUT
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.annotations['nydus.kineung.us/server-idle-timeout-seconds']
+          - name: SERVER_HEADER_NORMALIZING
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.annotations['nydus.kineung.us/server-headerNormalizing']
+          - name: DEFAULT_TO_STRING
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.annotations['nydus.kineung.us/print-default-tostring']
+          - name: XML_TO_STRING
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.annotations['nydus.kineung.us/print-xml-tostring']
+
 kind: ConfigMap
 metadata:
   name: nydus-sidecar-injector-configmap
