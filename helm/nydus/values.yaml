@@ -31,7 +31,7 @@ injector:
     image:
       registry: ghcr.io
       repository: "kineung-us/nydus"
-      tag: "0.1.21"
+      tag: "0.1.29"
 
   webhookFailurePolicy: Fail
 
