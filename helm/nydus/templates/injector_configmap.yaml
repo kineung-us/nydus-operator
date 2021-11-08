@@ -67,11 +67,11 @@ data:
               fieldRef:
                 apiVersion: v1
                 fieldPath: metadata.annotations['nydus.kineung.us/target-root']
-          - name: TARGET_HEALTHZ_ADDR
+          - name: TARGET_HEALTHZ_PATH
             valueFrom:
               fieldRef:
                 apiVersion: v1
-                fieldPath: metadata.annotations['nydus.kineung.us/target-healthz-addr']
+                fieldPath: metadata.annotations['nydus.kineung.us/target-healthz-path']
           - name: TARGET_VERSION
             valueFrom:
               fieldRef:
@@ -96,7 +96,7 @@ data:
             valueFrom:
               fieldRef:
                 apiVersion: v1
-                fieldPath: metadata.annotations['nydus.kineung.us/dapr-healthz-address']
+                fieldPath: metadata.annotations['nydus.kineung.us/dapr-healthz-addpress']
           - name: DAPR_HEALTHZ_TIMEOUT
             valueFrom:
               fieldRef:
